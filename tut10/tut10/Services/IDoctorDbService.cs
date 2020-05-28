@@ -7,8 +7,7 @@ namespace tut10.Services
     {
         IActionResult GetDoctorData(int id);
         IActionResult EnrollDoctor(Doctor doctor);
-        IActionResult DeleteStudent(int id);
-        IActionResult ChangeDoctorsEmail(string email);
-
+        IActionResult DeleteDoctor(int id);
+        IActionResult ChangeDoctorsEmail(int idDoctor,string email);
     }
 }

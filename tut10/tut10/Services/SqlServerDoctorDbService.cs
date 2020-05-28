@@ -18,53 +18,43 @@ namespace tut10.Services
         }
         private Doctor newDoctor = new Doctor();
 
-        public IActionResult PromoteStudent(PromoteStudent promote)
+        public IActionResult ChangeDoctorsEmail(int idDoctor,string email)
         {
-            //Checks if the Studies Name exists
-            int studiesId = context.Studies.Where(s => s.Name == promote.Studies).Select(s1 => s1.IdStudy).FirstOrDefault();
-
-            if (studiesId == 0) {
-                return NotFound("Stadies does not exist");
+            if (context.Doctor.Any(d => d.IdDoctor == idDoctor)) {
+                return NotFound("Such Doctor does not exists!");
             }
-
-            //Update table Endrollment
-            context.Enrollment.Where(e => e.IdStudy == studiesId && e.Semester == promote.Semester).ToList().ForEach(e1 => e1.Semester = promote.Semester + 1);
+            context.Doctor.Where(d => d.IdDoctor == idDoctor).ToList().ForEach(d => d.Email = email);
             context.SaveChanges();
-            return Ok();
+            return Ok("Email updated");
         }
 
-        public IActionResult DeleteStudent(int id)
+        public IActionResult DeleteDoctor(int id)
         {
-            //Search for Student index number to make sure that Student exist
             int idDoctor = context.Doctor.Where(d => d.IdDoctor == id).Select(d => d.IdDoctor).FirstOrDefault();
-          
             if (idDoctor == 0)
             {
                 return NotFound("Doctor does not Exist!");
             }
             else {
-                //remove student from Db
+               
                 context.Doctor.Remove(context.Doctor.Where(d => d.IdDoctor == id).First());
             }
-
             context.SaveChanges();
-            return Ok("Student has been deleted from Database!");
+            return Ok("Doctor has been deleted from Database!");
           
         }
 
-        public IActionResult EnrollStudent(Doctor doctor)
+        public IActionResult EnrollDoctor(Doctor doctor)
         {
            
             int indexNumberExist = context.Doctor.Where(d => d.IdDoctor == doctor.IdDoctor).Count();
             if (indexNumberExist > 0) {
-                return BadRequest("Try to enter enother idDoctor for this Doctor!\n" +
-                    $"The last enrolled Doctor has idDoctor : {context.Doctor.OrderBy(s1 => s1.IdDoctor).Select(d => d.IdDoctor).Last().ToString()}");
+                return BadRequest("Try to enter another idDoctor for this Doctor!\n" +
+                    $"The last enrolled Doctor has idDoctor : {context.Doctor.OrderBy(d => d.IdDoctor).Select(d => d.IdDoctor).Last().ToString()}");
             }
-
 
             newDoctor = doctor;
             
-
             int doctorExist = context.Doctor.Where(d => d.FirstName == doctor.FirstName
                                                        && d.LastName == doctor.LastName
                                                        && d.Email == doctor.Email).Select(s1 => s1.IdDoctor).FirstOrDefault();
@@ -83,8 +73,8 @@ namespace tut10.Services
 
         public IActionResult GetDoctorData(int id)
         {
-            if (context.Doctor.Any(d => d.IdDoctor == id)) {
-                return NotFound("Such Doctor does now exist! ");
+            if (!context.Doctor.Any(d => d.IdDoctor == id)) {
+                return NotFound("Such Doctor does not exists!");
             }
             Doctor doctor = context.Doctor.Where(d => d.IdDoctor == id).First();
             return Ok(doctor);
