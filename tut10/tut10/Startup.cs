@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using tut10.Models;
+using tut9.Services;
 
 namespace tut10
 {
@@ -27,6 +28,7 @@ namespace tut10
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IDoctorDbService, SqlServerDoctorDbService>();
             services.AddDbContext<PatientDbContext>(options =>
             {
                 options.UseSqlServer("Data Source=db-mssql;Initial Catalog=s19312;Integrated Security=True");

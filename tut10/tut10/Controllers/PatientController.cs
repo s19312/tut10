@@ -15,9 +15,9 @@ namespace tut10.Controllers
         public PatientController(PatientDbContext context) {
             _context = context;
         }
-        [HttpGet]
-        public IActionResult GetPatient() {
-            return Ok(_context.Patient.ToList());
+        [HttpGet("{id}")]
+        public IActionResult GetDoctor(int id) {
+            return Ok(_context.Doctor.ToList());
         }
     }
 }

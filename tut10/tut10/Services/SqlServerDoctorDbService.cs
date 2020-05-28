@@ -1,27 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using tut9.Configuration;
-using tut9.Models;
+using tut10.Models;
 
-namespace tut9.Services
+namespace tut10.Services
 {
     public class SqlServerDoctorDbService : ControllerBase, IDoctorDbService
     {
   
-        public readonly s19312Context context;
+        public readonly PatientDbContext context;
 
-        private Enrollment newEnroll = new Enrollment();
-        private Student newStudent = new Student();
 
-        public SqlServerDoctorDbService(s19312Context context)
+        public SqlServerDoctorDbService(PatientDbContext context)
         {
             this.context = context;
         }
-
+        private Doctor newDoctor = new Doctor();
 
         public IActionResult PromoteStudent(PromoteStudent promote)
         {
@@ -38,105 +33,61 @@ namespace tut9.Services
             return Ok();
         }
 
-        public IActionResult DeleteStudent(DeleteStudent delete)
+        public IActionResult DeleteStudent(int id)
         {
             //Search for Student index number to make sure that Student exist
-            string studentIndex = context.Student.Where(s => s.IndexNumber == delete.IndexNumber).Select(s1 => s1.IndexNumber).FirstOrDefault();
-            //Get IdEnrollment that assign to this Student
-            int studentIdEnroll = context.Student.Where(s => s.IndexNumber == delete.IndexNumber).Select(s1 => s1.IdEnrollment).FirstOrDefault();
-
-            if (studentIndex == null)
+            int idDoctor = context.Doctor.Where(d => d.IdDoctor == id).Select(d => d.IdDoctor).FirstOrDefault();
+          
+            if (idDoctor == 0)
             {
-                return NotFound("Student does not Exist!");
+                return NotFound("Doctor does not Exist!");
             }
             else {
-
                 //remove student from Db
-                context.Student.Remove(context.Student.Where(s => s.IndexNumber == studentIndex).First());
+                context.Doctor.Remove(context.Doctor.Where(d => d.IdDoctor == id).First());
             }
-           
-            //count how many Stundents are assigned to this idEnrollment
-            int countSameIdEnroll = context.Student.Where(s => s.IdEnrollment == studentIdEnroll).Count();
 
-
-            if (countSameIdEnroll == 1)
-            {
-                //remove Enrollment
-                context.Enrollment.Remove(context.Enrollment.Where(e => e.IdEnrollment == studentIdEnroll).First());
-            }
             context.SaveChanges();
             return Ok("Student has been deleted from Database!");
           
         }
 
-        public IActionResult EnrollStudent(EnrollStudent enrollStudent)
+        public IActionResult EnrollStudent(Doctor doctor)
         {
-            //Search for Studies Id
-            var studiesId = context.Studies.Where(s => s.Name == enrollStudent.StadiesName).Select(s1 => s1.IdStudy).FirstOrDefault();
-            //Checks if the Studies Name exists
-            if (studiesId == 0) {
-                return NotFound("Name of Study does not Exist!");
-            }
-
-
-            //Search for IdEnrollment with the same Date, Semester and Studies name
-            int enrollExist = 0;
-            enrollExist = context.Enrollment.Where(enroll => enroll.StartDate == DateTime.Today
-                                                                 && enroll.IdStudy == studiesId
-                                                                 && enroll.Semester == enrollStudent.Semester
-                                                          ).Select(e => e.IdEnrollment).FirstOrDefault();
-            //if record exists - assign new Enrollment as old one (that exists)
-            if (enrollExist != 0)
-            {
-                newEnroll = context.Enrollment.Where(e => e.IdEnrollment == enrollExist).First();
-            }
-            else{
-                //create new Endrollment
-                if (context.Enrollment.Where(e => e.IdEnrollment > 0).Count() == 0)
-                {
-                    newEnroll.IdEnrollment = 1;
-                }
-                else {
-                    newEnroll.IdEnrollment = context.Enrollment.Max(e => e.IdEnrollment) + 1;
-                }
-                newEnroll.Semester = enrollStudent.Semester;
-                newEnroll.IdStudy = studiesId;
-                newEnroll.StartDate = DateTime.Now;
-            }
-            //Search for the dame indexNumber
-            int indexNumberExist = context.Student.Where(s => s.IndexNumber == enrollStudent.IndexNumber).Count();
+           
+            int indexNumberExist = context.Doctor.Where(d => d.IdDoctor == doctor.IdDoctor).Count();
             if (indexNumberExist > 0) {
-                return BadRequest("Try to enter enother IndexNumber for this student!\n" +
-                    $"The last enrolled student has IndexNumber : {context.Student.OrderBy(s1 => s1.IndexNumber).Select(s => s.IndexNumber).Last().ToString()}");
+                return BadRequest("Try to enter enother idDoctor for this Doctor!\n" +
+                    $"The last enrolled Doctor has idDoctor : {context.Doctor.OrderBy(s1 => s1.IdDoctor).Select(d => d.IdDoctor).Last().ToString()}");
             }
 
-                     
-            newStudent.IndexNumber = enrollStudent.IndexNumber;
-            newStudent.FirstName = enrollStudent.FirstName;
-            newStudent.LastName = enrollStudent.LastName;
-            newStudent.BirthDate = enrollStudent.BirthDate;
-            newStudent.IdEnrollment = newEnroll.IdEnrollment;
 
-            //context.Enrollment.Add(newEnroll);
-            newStudent.IdEnrollmentNavigation = newEnroll;
+            newDoctor = doctor;
+            
 
-            //Checks if such a Student exists
-            string studentExist = context.Student.Where(s => s.FirstName == newStudent.FirstName
-                                                       && s.LastName == newStudent.LastName
-                                                       && s.BirthDate == newStudent.BirthDate).Select(s1 => s1.IndexNumber).FirstOrDefault();
+            int doctorExist = context.Doctor.Where(d => d.FirstName == doctor.FirstName
+                                                       && d.LastName == doctor.LastName
+                                                       && d.Email == doctor.Email).Select(s1 => s1.IdDoctor).FirstOrDefault();
 
-            //Adds new Student to Db
-            if (studentExist == null)
+            if (doctorExist == 0)
             {
-                context.Student.Add(newStudent);
+                context.Doctor.Add(newDoctor);
                 context.SaveChanges();
             }
             else
             {
-                return BadRequest($"This Student already exists INdexNumber : {studentExist}");
+                return BadRequest($"This Doctor already exists idDoctor : {doctorExist}");
             }
-            return Ok($"A new Student has been added IndexNUmber : {newStudent.IndexNumber}");
-   
+            return Ok($"A new Doctor has been added idDoctor : {newDoctor.IdDoctor}");
+        }
+
+        public IActionResult GetDoctorData(int id)
+        {
+            if (context.Doctor.Any(d => d.IdDoctor == id)) {
+                return NotFound("Such Doctor does now exist! ");
+            }
+            Doctor doctor = context.Doctor.Where(d => d.IdDoctor == id).First();
+            return Ok(doctor);
         }
     }
 }
