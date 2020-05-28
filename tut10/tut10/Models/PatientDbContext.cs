@@ -34,8 +34,6 @@ namespace tut10.Models
             modelBuilder.ApplyConfiguration(new MedicamentConfiguration());
             modelBuilder.ApplyConfiguration(new PrescriptionConfiguration());
             modelBuilder.ApplyConfiguration(new PrescriptionMedicamentConfiguration());
-            OnModelCreatingPartial(modelBuilder);
         }
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

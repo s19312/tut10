@@ -103,7 +103,5 @@ D:\Study\APBD\tut10\tut10\tut10\obj\Debug\netcoreapp3.1\staticwebassets\tut10.St
 D:\Study\APBD\tut10\tut10\tut10\obj\Debug\netcoreapp3.1\tut10.dll
 D:\Study\APBD\tut10\tut10\tut10\obj\Debug\netcoreapp3.1\tut10.pdb
 D:\Study\APBD\tut10\tut10\tut10\obj\Debug\netcoreapp3.1\tut10.genruntimeconfig.cache
-D:\Study\APBD\tut10\tut10\tut10\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
-D:\Study\APBD\tut10\tut10\tut10\bin\Debug\netcoreapp3.1\Microsoft.WindowsAzure.Storage.dll
 D:\Study\APBD\tut10\tut10\tut10\obj\Debug\netcoreapp3.1\tut10.csproj.CoreCompileInputs.cache
 D:\Study\APBD\tut10\tut10\tut10\obj\Debug\netcoreapp3.1\tut10.MvcApplicationPartsAssemblyInfo.cache

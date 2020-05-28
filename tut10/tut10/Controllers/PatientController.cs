@@ -11,8 +11,8 @@ namespace tut10.Controllers
     [Route("api/students")]
     public class PatientController : ControllerBase
     {
-        public readonly DbContext _context;
-        public PatientController(DbContext context) {
+        public readonly PatientDbContext _context;
+        public PatientController(PatientDbContext context) {
             _context = context;
         }
         [HttpGet]

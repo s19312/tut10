@@ -11,7 +11,8 @@ namespace tut10.Models
         public Doctor()
         {
             Prescription = new HashSet<Prescription>();
-        } 
+        }
+
         public int IdDoctor { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

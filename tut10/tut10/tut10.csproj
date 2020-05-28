@@ -5,13 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AzureMarkdownRewriterTool" Version="2.42.3" />
+    <Compile Remove="Migrations\20200528200856_AddedPatientTable.cs" />
+    <Compile Remove="Migrations\20200528200856_AddedPatientTable.Designer.cs" />
+    <Compile Remove="Migrations\20200528202058_AddedPatientTable.cs" />
+    <Compile Remove="Migrations\20200528202058_AddedPatientTable.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 

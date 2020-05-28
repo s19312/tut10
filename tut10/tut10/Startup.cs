@@ -31,6 +31,7 @@ namespace tut10
             {
                 options.UseSqlServer("Data Source=db-mssql;Initial Catalog=s19312;Integrated Security=True");
             });
+
             services.AddControllers();
         }
 
