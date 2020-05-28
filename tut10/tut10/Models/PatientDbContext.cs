@@ -15,12 +15,22 @@ namespace tut10.Models
         public PatientDbContext(DbContextOptions<PatientDbContext> options)
             : base(options)
         {
+
+
         }
 
         public DbSet<Patient> Patient { get; set; }
         public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Medicament> Medicament { get; set; }
-
+        public DbSet<PrescriptionMedicament> Prescription_Medicament { get; set; }
         public DbSet<Prescription> Prescription { get; set; }
+
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+
+        }
     }
 }
