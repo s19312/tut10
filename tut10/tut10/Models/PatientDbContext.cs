@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using tut10.Configuration;
 
 namespace tut10.Models
 {
@@ -25,12 +26,16 @@ namespace tut10.Models
         public DbSet<PrescriptionMedicament> Prescription_Medicament { get; set; }
         public DbSet<Prescription> Prescription { get; set; }
 
-        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-
+            modelBuilder.ApplyConfiguration(new PatientConfiguration());
+            modelBuilder.ApplyConfiguration(new DoctorConfiguration());
+            modelBuilder.ApplyConfiguration(new MedicamentConfiguration());
+            modelBuilder.ApplyConfiguration(new PrescriptionConfiguration());
+            modelBuilder.ApplyConfiguration(new PrescriptionMedicamentConfiguration());
+            OnModelCreatingPartial(modelBuilder);
         }
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
