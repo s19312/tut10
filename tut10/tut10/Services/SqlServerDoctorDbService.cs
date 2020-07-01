@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,17 @@ namespace tut10.Services
         }
         private Doctor newDoctor = new Doctor();
 
-        public IActionResult ChangeDoctorsEmail(int idDoctor,string email)
+        public IActionResult ChangeDoctorData(Doctor newDoctorData)
         {
-            if (context.Doctor.Any(d => d.IdDoctor == idDoctor)) {
+            if (!context.Doctor.Any(d => d.IdDoctor == newDoctorData.IdDoctor)) {
                 return NotFound("Such Doctor does not exists!");
             }
-            context.Doctor.Where(d => d.IdDoctor == idDoctor).ToList().ForEach(d => d.Email = email);
-            context.SaveChanges();
-            return Ok("Email updated");
+            Doctor doctor = context.Doctor.Find(newDoctorData.IdDoctor);
+            doctor.FirstName = newDoctorData.FirstName;
+            doctor.LastName = newDoctorData.LastName;
+            doctor.Email = newDoctorData.Email;
+            context.SaveChanges();                              
+            return Ok("Updated");
         }
 
         public IActionResult DeleteDoctor(int id)

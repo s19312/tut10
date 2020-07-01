@@ -9,14 +9,15 @@ using tut10.Services;
 namespace tut10.Controllers
 {
     [ApiController]
-    [Route("api/students")]
+    [Route("api/doctors")]
     public class DoctorController : ControllerBase
     {
         public readonly IDoctorDbService _service;
         public DoctorController(IDoctorDbService service) {
             _service = service;
         }
-        [HttpGet("{id}")]
+
+        [HttpGet("/api/doctors/{id}")]
         public IActionResult GetDoctor(int id) {
             return Ok(_service.GetDoctorData(id));
         }
@@ -27,10 +28,10 @@ namespace tut10.Controllers
             return _service.EnrollDoctor(doctor);
         }
 
-        [HttpPost("changeEmail")]
-        public IActionResult ChangeDoctorEmail(int idDoctor,string email)
+        [HttpPut]
+        public IActionResult ChangeDoctorData(Doctor doctor)
         {
-            return _service.ChangeDoctorsEmail(idDoctor,email);
+            return _service.ChangeDoctorData(doctor);
         }
 
         [HttpDelete("{id}/delete")]

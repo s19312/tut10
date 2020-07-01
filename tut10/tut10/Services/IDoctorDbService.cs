@@ -8,6 +8,6 @@ namespace tut10.Services
         IActionResult GetDoctorData(int id);
         IActionResult EnrollDoctor(Doctor doctor);
         IActionResult DeleteDoctor(int id);
-        IActionResult ChangeDoctorsEmail(int idDoctor,string email);
+        IActionResult ChangeDoctorData(Doctor doctor);
     }
 }
